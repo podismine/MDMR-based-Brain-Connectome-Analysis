@@ -186,3 +186,58 @@ rownames(mdmr.p_corrected)[which(mdmr.p_corrected$DX<0.05)]
 ##
 #write.csv(mdmr.p_corrected,"F://new_result//RBDQ.HK_p.csv")
 
+                                           # Effect size with parcel index=t 
+# create D for parcel index=t 
+D=matrix(0,nrow = n,ncol = n)
+for (j in 1:n) {
+  for (k in 1:n) {
+    if (isTRUE(all.equal(FA_array[t,,j],rep(0,q)))){
+      D[j,k]=0
+    } else if (isTRUE(all.equal(FA_array[t,,k],rep(0,q)))){
+      D[j,k]=0
+    } else {
+      D[j,k]=(2*(1-cor(FA_array[t,,j],FA_array[t,,k])))^0.5
+    }  
+  }
+}
+
+G <- gower(D)
+# permutation
+G.list <- lapply(1:q, FUN = function(m) {
+  set.seed(m)
+  Y.shuf <- FA_array[t,,]
+  Y.shuf[m,] <- sample(Y.shuf[m,])
+  D2=matrix(0,nrow = n,ncol = n)
+  for (j in 1:n) {
+    for (k in 1:n) {
+      if (isTRUE(all.equal(Y.shuf[,j],rep(0,q)))){
+        D2[j,k]=0
+      } else if (isTRUE(all.equal(Y.shuf[,k],rep(0,q)))){
+        D2[j,k]=0
+      } else {
+        D2[j,k]=(2*(1-cor(Y.shuf[,j],Y.shuf[,k])))^0.5
+      }  
+    }
+  }
+  
+  gower(D2)
+})
+names(G.list) <- nodes_ID[,2]
+par(mar = c(5, 5, 4, 2) + 0.1)
+EffectSize=delta(X = X, G = G, G.list = G.list, plot.res = T)
+
+# mean connectivity for each seed node after MDMR
+n_group=length(levels(sub_train$DX))
+D_group=matrix(0,nrow = n_group,ncol = n_group)
+FA_array_group=array(0, dim=c(q,q,n_group))
+Seed_Connectome=matrix(0,nrow = n_group,ncol = q)
+rownames(Seed_Connectome)=levels(sub_train$DX)
+colnames(Seed_Connectome)=nodes_ID[,2]
+for (i in 1:n_group){
+  FA_array_group[,,i]=apply(FA_array[,,which(sub_train$DX==levels(sub_train$DX)[i])],1:2,mean) #calulate average FA matrix for each group 
+  Seed_Connectome[i,]=FA_array_group[t,,i] # Average seed-based connectome for each group
+}
+
+# Test significant change of nodal degree for specific node
+TukeyHSD(aov(Thalamus_L ~ group, NodalDegree))
+
