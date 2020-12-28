@@ -6,7 +6,6 @@ cat("\014")
 library(MDMR)
 library(stringr)
 library(dplyr)
-#library(ADNIMERGE)
 library(ggrepel)
 library(caret)
 library(e1071)
@@ -76,7 +75,7 @@ for (i in 1:55) {
 
 matrix_path='D:\\yyw\\pd\\RBM\\'
 sub_img=list.files(matrix_path)
-for (i in 1:29) {
+for (i in 1:35) {
   FA_mat=as.matrix(read.csv(str_c("D:\\yyw\\pd\\RBM\\", as.character(sub_img[i])), sep = ",",header = FALSE))
   #print(i)
   Feat_all[i + 116,]=FA_mat[idx_tria]
@@ -162,10 +161,10 @@ for (i in 1:q) {
 
 
 library(fdrtool)
-mdmr.p_corrected[,1]=mdmr.F*(n-1)
-#mdmr.p_corrected[1:q,2:(ncol(X)+1)]=sapply(1:ncol(X), function(i) fdrtool(mdmr.p[,i],statistic = 'pvalue')$pval)[1:q,]
+mdmr.p_corrected[,1]=mdmr.F*(n-1)q
+mdmr.p_corrected[1:q,2:(ncol(X)+1)]=sapply(1:ncol(X), function(i) fdrtool(mdmr.p[,i],statistic = 'pvalue')$qval)[1:q,]
 #mdmr.p_corrected[,2:(ncol(X)+1)]=sapply(1:ncol(X), function(i) p.adjust(mdmr.p[,i], method = "fdr"))
-mdmr.p_corrected[1:q,2:(ncol(X)+1)]=sapply(1:ncol(X), function(i) fdrtool(mdmr.p[,i],statistic = 'pvalue')$pval)[1:q,]
+#mdmr.p_corrected[1:q,2:(ncol(X)+1)]=sapply(1:ncol(X), function(i) fdrtool(mdmr.p[,i],statistic = 'pvalue')$lfdr)[1:q,]
 rownames(mdmr.p_corrected)=nodes_ID[,2]
 colnames(mdmr.p_corrected)=c('Statistic',colnames(X))
 mdmr.p_corrected=as.data.frame(mdmr.p_corrected)
