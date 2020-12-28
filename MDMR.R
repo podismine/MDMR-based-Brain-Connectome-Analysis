@@ -188,6 +188,7 @@ rownames(mdmr.p_corrected)[which(mdmr.p_corrected$DX<0.05)]
 
                                            # Effect size with parcel index=t 
 # create D for parcel index=t 
+t = 5
 D=matrix(0,nrow = n,ncol = n)
 for (j in 1:n) {
   for (k in 1:n) {
@@ -239,5 +240,5 @@ for (i in 1:n_group){
 }
 
 # Test significant change of nodal degree for specific node
-TukeyHSD(aov(Thalamus_L ~ group, NodalDegree))
+#TukeyHSD(aov(Thalamus_L ~ group, NodalDegree))
 
