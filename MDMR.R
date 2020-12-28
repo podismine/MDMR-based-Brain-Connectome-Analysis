@@ -132,7 +132,7 @@ to_do = as.data.frame(sub_proc)
 #to_do = to_do[to_do[, "DX"] != "PD",]
 #to_do<-subset(to_do,RBDQ.HK!="NA")
 n = nrow(to_do)
-X=select(to_do,DX,sex,age)
+X=dplyr::select(to_do,DX,sex,age)
 mdmr.p=matrix(nrow=q,ncol=ncol(X))
 mdmr.F=matrix(nrow=q,ncol=1)
 D=matrix(0,nrow = n,ncol = n)
