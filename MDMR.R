@@ -13,7 +13,7 @@ library(InformationValue)
 library(pROC)
 library(coin)
 #
-type = 'scale_sum\\'
+type = 'revision\\'
 # invscale_mean invscale_sum scale_mean scale_sum
 
 nodes_ID=read.table("D:\\PD_NEW\\node.txt", sep = ',')
@@ -59,7 +59,7 @@ for (i in 1:55) {
 
 matrix_path=str_c('D:\\PD_NEW\\RBD\\', type)
 sub_img=list.files(matrix_path)
-for (i in 1:29) {
+for (i in 1:35) {
   FA_mat=as.matrix(read.csv(str_c(matrix_path, as.character(sub_img[i])), sep = ",",header = FALSE))
   print(i)
   Feat_all[i + 116,]=FA_mat[idx_tria]
@@ -72,7 +72,6 @@ Feat_all=cbind(group,Feat_all)
 
 # MDMR
 to_do = as.data.frame(sub_proc)
-#to_do = to_do[to_do[, "DX"] != "PD",]
 n = nrow(to_do)
 X=dplyr::select(to_do,DX,sex,age)
 mdmr.p=matrix(nrow=q,ncol=ncol(X))
@@ -111,8 +110,6 @@ mdmr.p_corrected=as.data.frame(mdmr.p_corrected)
 
 # Number of significant connectomes
 length(which(mdmr.p_corrected$DX<0.05))
-
-#length(which(mdmr.old_p_corrected$HAMD<0.05))
 # Index for significant connectomes
 which(mdmr.p_corrected$DX<0.05)
 
